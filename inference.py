@@ -118,6 +118,7 @@ def convert_video(model,
         with torch.no_grad():
             bar = tqdm(total=len(source), disable=not progress, dynamic_ncols=True)
             rec = [None] * 4
+            frame_no = 0
             for src in reader:
 
                 if downsample_ratio is None:
@@ -125,6 +126,8 @@ def convert_video(model,
 
                 src = src.to(device, dtype, non_blocking=True).unsqueeze(0) # [B, T, C, H, W]
                 fgr, pha, *rec = model(src, *rec, downsample_ratio)
+                if frame_no%10 == 0:
+                    print(*rec)
 
                 if output_foreground is not None:
                     writer_fgr.write(fgr[0])
@@ -133,6 +136,8 @@ def convert_video(model,
                 if output_composition is not None:
                     if output_type == 'video':
                         com = fgr * pha + bgr * (1 - pha)
+                        np.save('fgr{}.npy'.format(frame_no), fgr)
+                        np.save('pha{}.npy'.format(frame_no), pha)
                     else:
                         fgr = fgr * pha.gt(0)
                         com = torch.cat([fgr, pha], dim=-3)
