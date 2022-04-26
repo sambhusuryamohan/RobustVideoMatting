@@ -138,8 +138,9 @@ def convert_video(model,
                 if output_composition is not None:
                     if output_type == 'video':
                         com = fgr * pha + bgr * (1 - pha)
-                        np.save('fgr{}.npy'.format(frame_no), fgr.cpu())
-                        np.save('pha{}.npy'.format(frame_no), pha.cpu())
+                        if frame_no%100 == 0:
+                            np.save('fgr{}.npy'.format(frame_no), fgr.cpu())
+                            np.save('pha{}.npy'.format(frame_no), pha.cpu())
                     else:
                         fgr = fgr * pha.gt(0)
                         com = torch.cat([fgr, pha], dim=-3)
