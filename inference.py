@@ -127,9 +127,9 @@ def convert_video(model,
 
                 src = src.to(device, dtype, non_blocking=True).unsqueeze(0) # [B, T, C, H, W]
                 fgr, pha, *rec = model(src, *rec, downsample_ratio)
-                with open('rec_data.txt', 'w') as rec_file:
-                    if frame_no%10 == 0:
-                        rec_file.write(*rec)
+                #with open('rec_data.txt', 'w') as rec_file:
+                #    if frame_no%10 == 0:
+                #        rec_file.write(*rec)
 
                 if output_foreground is not None:
                     writer_fgr.write(fgr[0])
