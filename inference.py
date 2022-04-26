@@ -129,7 +129,7 @@ def convert_video(model,
                 fgr, pha, *rec = model(src, *rec, downsample_ratio)
                 with open('rec_data.txt', 'w') as rec_file:
                     if frame_no%10 == 0:
-                        f.write(*rec)
+                        rec_file.write(*rec)
 
                 if output_foreground is not None:
                     writer_fgr.write(fgr[0])
