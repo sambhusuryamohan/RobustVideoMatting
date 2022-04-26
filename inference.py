@@ -142,6 +142,7 @@ def convert_video(model,
                         fgr = fgr * pha.gt(0)
                         com = torch.cat([fgr, pha], dim=-3)
                     writer_com.write(com[0])
+                frame_no += 1
                 
                 bar.update(src.size(1))
 
