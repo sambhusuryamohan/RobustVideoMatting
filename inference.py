@@ -127,8 +127,9 @@ def convert_video(model,
 
                 src = src.to(device, dtype, non_blocking=True).unsqueeze(0) # [B, T, C, H, W]
                 fgr, pha, *rec = model(src, *rec, downsample_ratio)
-                if frame_no%10 == 0:
-                    print(*rec)
+                with open('rec_data.txt', 'w') as rec_file:
+                    if frame_no%10 == 0:
+                        f.write(*rec)
 
                 if output_foreground is not None:
                     writer_fgr.write(fgr[0])
@@ -137,8 +138,8 @@ def convert_video(model,
                 if output_composition is not None:
                     if output_type == 'video':
                         com = fgr * pha + bgr * (1 - pha)
-                        np.save('fgr{}.npy'.format(frame_no), fgr)
-                        np.save('pha{}.npy'.format(frame_no), pha)
+                        np.save('fgr{}.npy'.format(frame_no), fgr.cpu())
+                        np.save('pha{}.npy'.format(frame_no), pha.cpu())
                     else:
                         fgr = fgr * pha.gt(0)
                         com = torch.cat([fgr, pha], dim=-3)
